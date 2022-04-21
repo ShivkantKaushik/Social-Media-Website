@@ -4,7 +4,8 @@
         <!-- here /css,  becuse to look root of the folder we have give in index.js while
         defining static files  -->
         <link rel="stylesheet" href="/css/layout.css">
-        
+        <link rel="stylesheet" href="/css/header.css">
+        <link rel="stylesheet" href="/css/footer.css">
         <!-- Now any link tag if there is in body of layout.ejs, it would put it in head section , and
         any script, it would put at place of <%- script %> -->
 
@@ -18,7 +19,11 @@
         <!-- <h1>Codeial / <%= title %></h1> -->
         <!-- this body is just a syntax like "include", the data rendered from home_controller.ejs
         would get displayed here -->
-        <%- body %>
+
+        <main id = 'layout-main'>
+            <%- body %>
+        </main>
+        
 
 
         <%- include("_footer"); %>
