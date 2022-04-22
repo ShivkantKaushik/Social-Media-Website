@@ -7,11 +7,19 @@ const postSchema = new mongoose.Schema({
     },
 
     user: {
-        // there is unique objectId in robo3T for each collection
+        // there is unique objectId in robo3T for each object
         type: mongoose.Schema.Types.ObjectId,
         // refering to "user" schema
         ref: 'User'
-    }
+    },
+
+    //include the array of ids of all the comments in the post schema itself
+    comments: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Comment"
+        }
+    ]
 },{
     timestamps: true
 });
