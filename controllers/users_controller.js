@@ -1,10 +1,31 @@
 const User = require("../models/user.js");
 
 module.exports.profile = function (req, res){
-    // res.end("<h1>User Profile</h1>");
-    return res.render('user_profile', {
-        title: "User Profile"
-    });
+
+    User.findById(req.params.id, function(err, user){
+        // res.end("<h1>User Profile</h1>");
+        return res.render('user_profile', {
+            title: "User Profile",
+            profile_user: user
+        });
+    })
+
+    
+}
+
+
+module.exports.update = function(req, res){
+    //to check user that is logged in, only he is updating the profile
+    if(req.user.id == req.params.id){
+        //we can also replace req.body by {name: req.body.name, email: req.body.email}
+        // but req.body is exactly that json object what we have to update so below code
+        User.findByIdAndUpdate(req.params.id, req.body, function(err, user){
+            return res.redirect("back");
+        })
+
+    }else{
+        return res.status(401).send("Unautherized");
+    }
 }
 
 module.exports.signup = function(req,res){

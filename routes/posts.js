@@ -9,5 +9,6 @@ const postsController = require("../controllers/posts_controller");
 // see action also, once signed in , and then they can post anonymously , so to prevent it we would
 //  need once check at controller level also
 router.post("/create", passport.checkAuthentication, postsController.create);
+router.get("/destroy/:id", passport.checkAuthentication, postsController.destroy);
 
 module.exports = router;
