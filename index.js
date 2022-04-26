@@ -20,6 +20,10 @@ const MongoStore = require("connect-mongo");
 
 const sassMiddleware = require("node-sass-middleware");
 
+const flash = require("connect-flash");
+
+const customMware = require('./config/middleware');
+
 //put this just before server starts, because we need these files to be precompiled just before the
 // server starts,so whenever browsers asks for the files we can give
 app.use(sassMiddleware({
@@ -85,6 +89,10 @@ app.use(passport.session());
 // setAuthenticatedUser in passport-local-stategy is called, and it will set user in the locals
 // and the user should be accessible in views
 app.use(passport.setAuthenticatedUser);
+
+app.use(flash());
+
+app.use(customMware.setFlash);
 
 // using express router
 app.use("/",require("./routes"));

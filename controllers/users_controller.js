@@ -78,6 +78,8 @@ module.exports.create = function(req,res){
 
 // Sign in and create a session for the user
 module.exports.createSession = function(req, res){
+    //first argument is type of flash message, we can give anything xyz
+    req.flash('success', "Logged in Successfully");
     return res.redirect("/");
 }
 
@@ -85,6 +87,7 @@ module.exports.createSession = function(req, res){
 module.exports.destroySession = function(req, res){
     // this logout function is in passport
     req.logout();
-
+    req.flash('success', "You have logged out!");
     return res.redirect("/");
 }
+
