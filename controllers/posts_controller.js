@@ -4,12 +4,24 @@ const Comment = require("../models/comment");
 module.exports.create = async function(req, res){
 
     try{
-        await Post.create({
+       let post = await Post.create({
             content: req.body.content,
             // we are able to access req.user because in setAuthenticated function in passport-local-strategy
             // we have written req.locals.user = req.user , which means send req.user to views, to all file in views
             user: req.user._id
        });
+       //check if this is a xmlHTTPRequest, means ajax request
+       if (req.xhr){
+           // so that name appears below post when created through ajax
+        post = await post.populate('user');
+           return res.status(200).json({
+               data: {
+                   //post in value pair, is let post above 
+                   post: post
+               },
+               message: "Post Created!"
+           });
+       }
        req.flash("success", "Post published!");
        return res.redirect('back');
 
@@ -35,6 +47,17 @@ module.exports.destroy = async function(req, res){
                 post.remove();
     
                 await Comment.deleteMany({post: req.params.id});
+
+                if (req.xhr){
+                    
+                    return res.status(200).json({
+
+                        data: {
+                            post_id: req.params.id
+                        },
+                        message: "Post deleted!"
+                    });
+                }
                 req.flash("success", "Post and associated comments deleted!");
 
 
