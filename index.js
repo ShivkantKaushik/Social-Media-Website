@@ -16,6 +16,7 @@ const db = require("./config/mongoose.js");
 const session = require('express-session'); 
 const passport = require('passport');
 const passportLocal = require('./config/passport-local-strategy');
+const passportJWT = require('./config/passport-jwt-strategy');
 const MongoStore = require("connect-mongo");
 
 const sassMiddleware = require("node-sass-middleware");
@@ -54,6 +55,9 @@ app.set('layout extractScripts', true);
 
 // static files
 app.use(express.static("./assets"));
+
+//make the uploads path available to the browser
+app.use('/uploads', express.static(__dirname + '/uploads'));
 
 // set up the view engine
 app.set('view engine', 'ejs');
