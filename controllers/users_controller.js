@@ -3,6 +3,12 @@ const User = require("../models/user.js");
 const fs = require("fs");
 //path, where file should be deleted
 const path = require('path');
+const ResetPasswordToken = require("../models/resetPasswordToken");
+
+const resetPasswordMailer = require("../mailers/reset_password_mailer");
+
+const crypto = require("crypto");
+
 
 module.exports.profile = function (req, res){
 
@@ -110,10 +116,9 @@ module.exports.create = function(req,res){
     if (req.body.password != req.body.confirm_password){
         return res.redirect("back");
     }
-
     User.findOne({email: req.body.email}, function(err, user){
         if(err){ console.log("Error in finding user in signing up"); return }
-
+        
         if(!user){
             User.create(req.body, function(err, user){
                 if(err){ console.log("Error in creating user while signing up"); return }
@@ -145,3 +150,88 @@ module.exports.destroySession = function(req, res){
     return res.redirect("/");
 }
 
+module.exports.forgotPassword = function(req,res){
+    return res.render('forgotPassword',{
+        title: "Forgot Password"
+    });
+}
+
+// here async await because User.findOne is asynchronus call, so if user not exist, control will
+//go further then, whom to send mail
+// also if we are using async await we can't use callback in user.finone, because if would be mix of promises and
+// callbacks,and will give error, so we have to use .then here, 
+//and in .then ,first argument would be user found , second argument will be error
+// also we are finding user and making token here only, so that we can use noty and show notification if 
+// user not exist, if we write this code in reset_password_mailer, then noty is not available there 
+module.exports.resetPassword = async function(req,res){
+   await User.findOne({email: req.body.email}).then(function(user, err){
+        if(err){console.log("Error in finding user", err);}
+        if(user){
+            let token = crypto.randomBytes(20).toString('hex');
+            ResetPasswordToken.create({
+                user: user,
+                token: token,
+                valid: true
+            },function(err,rptObject){
+                if(err){ console.log("Error in creating reset password token object", err);}
+            });
+            req.resetLink = '<p>Click <a href="http://localhost:8000/reset-password/' + token + '">http://localhost:8000/reset-password/' + token + '</a> to reset the password.</p>';
+        }else{
+            req.flash("error", "User doesn't exist, Please sign up!");
+            return res.redirect("/users/sign-up");
+        }
+
+    });
+    resetPasswordMailer.resetPassword(req);
+    req.flash("success", "Password Reset link is sent");
+    return res.redirect("/users/sign-in");
+}
+
+// async await, because if control go to res.render and token is invalid, link can be reused to change
+// the password
+module.exports.updatePassword = async function(req,res){
+    // when using .then , use err as second argument
+    //also if we are using async await we can't use callback in user.finone, because if would be mix of promises and
+// callbacks,and will give error, so we have to use .then here, 
+    await ResetPasswordToken.findOne({token: req.params.id}).then(function(token, err){
+        console.log(token);
+        if(err){console.log("Error in finding token", err);}
+        if(token.valid == false){
+            req.flash("error", "Reset Password Link Got Expired, Please again click on Forgot Password!");
+            return res.redirect("/users/sign-in");
+        }
+    })
+   return  res.render('updatePassword',{
+        title: "Update Password",
+        tokenForResettingPassword: req.params.id
+    })
+}
+
+module.exports.postReqToUpdatePassword = function(req,res){
+    ResetPasswordToken.findOne({token: req.body.token}, function(err,token){
+        if(err){
+            // if error in finding token, anyway we would say to user, link got expired
+            console.log("error in finding token", err);
+            req.flash("error", "Reset Password Link Got Expired, Please again click on Forgot Password!");
+            return res.redirect("/users/reset-password");
+        }else{
+            // reset the password
+            if (req.body.password == req.body.confirmPassword){
+                
+                    // here simply token.user.id didn't came in string format
+                    User.findByIdAndUpdate(token.user._id.toString(), {password: req.body.password}, function(err,user){
+                        if(err){console.log("Error in resetting password", err);}
+                    });
+                    req.flash("success", "Your password is reset now!");
+                    ResetPasswordToken.findByIdAndUpdate(token._id.toString(), {valid: false}, function(err,user){
+                        if(err){console.log("Error in updating token validness", err);}
+                    });
+                    return res.redirect("/users/sign-in");
+            }else{
+                req.flash("error", "Passwords doesn't match");
+                return res.redirect("/reset-password/" + req.params.id);
+            }
+           
+        }
+    })
+}

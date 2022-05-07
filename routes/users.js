@@ -31,4 +31,7 @@ router.get("/auth/google", passport.authenticate('google', {scope: ['profile', '
 // this url as authorized redirect url, while creating credentials on google
 router.get('/auth/google/callback', passport.authenticate('google', {failureRedirect: "users/sign-in"}), usersController.createSession );
 
+router.get('/forgot-password', usersController.forgotPassword);
+router.post('/reset-password', usersController.resetPassword);
+
 module.exports = router;
