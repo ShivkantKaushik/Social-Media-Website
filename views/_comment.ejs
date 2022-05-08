@@ -13,6 +13,24 @@
        <small>
            <%= comment.user.name %>
        </small>
+
+       <small>
+        <%= post.user.name %>
+    </small>
+    <br>
+    <!-- Now in the front end side, if we are signed out , it would only show us count of like,
+     would not allow to like the post or comments and if signed in allow us -->
+    <small>
+        <% if(locals.user){%>
+            <a  class="toggle-like-button" data-likes="<%= comment.likes.length %>"  href="likes/toggle/?id=<%= comment._id %>&type=Comment">
+                <%= comment.likes.length %> Likes
+            </a>
+            <%}else{%>
+              <%= comment.likes.length %> Likes
+              <%}%>
+
+    </small>
+
    </p>
 
 </li>

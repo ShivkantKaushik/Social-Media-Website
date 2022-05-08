@@ -18,8 +18,10 @@ router.use("/comments", require("./comments"));
 
 router.use('/api', require('./api'));
 
-
 router.get('/reset-password/:id', usersController.updatePassword);
 router.post('/reset-password/:id', usersController.postReqToUpdatePassword);
+
+
+router.use('/likes', require('./likes'));
 
 module.exports = router;
