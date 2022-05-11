@@ -1,7 +1,15 @@
 <link rel="stylesheet" href="/css/home.css">
 
-
 <div id="home-container">
+    <section id = "all-users">
+        <h4>Users</h4>
+        <% for(u of all_users){ %>
+            <p>
+                <a href="/users/profile/<%= u.id %>"> <%= u.name %> </a>
+            </p>
+        <%}%>
+    </section>
+
     <section id = "feed-posts" >
         <h4>Posts</h4>
         <!-- if block, to check authentication on creating post
@@ -22,15 +30,20 @@
         </div>
     </section>
 
-    <section id = "user-friends">
+    <section id="all-friends">
         <h4>Friends</h4>
-        <% for(u of all_users){ %>
-            <p>
-                <a href="/users/profile/<%= u.id %>"> <%= u.name %> </a>
-            </p>
-        <%}%>
+        <div id = "friends-list-container" data-abc="abc">
+            <% if(locals.user){ %>
+                <% for (friend of all_friends){ %>
+                <p> <a href="/users/profile/<%= friend.id %>"> <%= friend.name %> </a> </p>
+                <%}%>
+           <%}%>
+            
+        </div>
     </section>
+    
 </div>
+<script src="/js/friends.js"></script>
 <script src="/js/home_post_comments.js" ></script>
 <script src="/js/home_posts.js"></script>
 

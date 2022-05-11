@@ -1,3 +1,4 @@
+const Friendship = require("../models/friendship");
 const Post = require("../models/post");
 const User = require("../models/user");
 
@@ -101,11 +102,42 @@ module.exports.home = async function(req, res){
         }).populate('likes');
     
        let users = await User.find({});
+       let allFriends = [];
+
+       // here instead of exec .then is used, because, lower function log statements were printing first
+       // tried .then and it worked
+       if (req.user){
+
+        await Friendship.find({from_user: req.user.id})
+        .populate('to_user').then(function(friendships,err){
+            if(err){console.log("Error in finding friends", err);}
+            if(friendships){
+                for(friendship of friendships){
+                    allFriends.push(friendship.to_user);
+                }
+            }
+        });
+
+       await Friendship.find({to_user: req.user.id})
+        .populate('from_user').then(function(friendships, err){
+            if(err){console.log("Error in finding friends", err);}
+            if(friendships){
+                for(friendship of friendships){
+                    allFriends.push(friendship.from_user);
+                }
+            }
+        });
+
+
+       }
+       
+        // console.log(allFriends);
     
        return res.render('home', {
         title: "Codeial | Home",
         posts: posts,
-        all_users: users
+        all_users: users,
+        all_friends: allFriends
      });
 
     }catch(err){

@@ -23,5 +23,6 @@ router.post('/reset-password/:id', usersController.postReqToUpdatePassword);
 
 
 router.use('/likes', require('./likes'));
+router.use('/friends', require('./friends'));
 
 module.exports = router;

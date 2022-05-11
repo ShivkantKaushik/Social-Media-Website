@@ -2,12 +2,19 @@
     display: flex;
     height: 100%;
     #feed-posts{
-        width: 70%;
+        width: 50%;
         padding: 10px;
     }
 
-    #user-friends{
-        width: 30%;
+    #all-users{
+        width: 20%;
+        padding: 10px;
+        border-right: 1px solid lightgray;
+        height: 100%;
+    }
+
+    #all-friends{
+        width:30%;
         padding: 10px;
         border-left: 1px solid lightgray;
         height: 100%;

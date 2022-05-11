@@ -8,15 +8,30 @@ const ResetPasswordToken = require("../models/resetPasswordToken");
 const resetPasswordMailer = require("../mailers/reset_password_mailer");
 
 const crypto = require("crypto");
+const Friendship = require("../models/friendship.js");
 
 
 module.exports.profile = function (req, res){
 
-    User.findById(req.params.id, function(err, user){
-        // res.end("<h1>User Profile</h1>");
+    User.findById(req.params.id, async function(err, user){
+        let textValueOfAddFriendButton = "Add Friend";
+        let isFriend = 'false';
+        //had to use await here, as value of isFriend and textvalu... variable was not updating and controll
+        // was moving further, used async await with mongosse query, so had to use .then, as can't mix
+        // promises and call back according to result when searched with error came, and gave err as 2nd
+        // parameter, in this situa
+       await Friendship.findOne({ $or: [{ from_user: req.user.id, to_user: req.params.id }, {from_user: req.params.id, to_user: req.user.id}]}).then(function(friendship, err){
+            if(err)("Error in finding relationship", err);
+            if(friendship){
+                textValueOfAddFriendButton = "Unfriend";
+                isFriend = 'true';
+            }
+        })
         return res.render('user_profile', {
             title: "User Profile",
-            profile_user: user
+            profile_user: user,
+            buttonText: textValueOfAddFriendButton,
+            isFriend: isFriend
         });
     })
 

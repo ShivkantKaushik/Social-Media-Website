@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const multer = require("multer");
+const { type } = require('os');
 //because we will be setting the path where file is stored
 const path = require('path');
 //so this is the path where we will be storing all the DPs, avatar refers to DP
@@ -24,8 +25,15 @@ const userSchema = new mongoose.Schema({
 
     avatar: {
         type: String
-    }
-},{// whenever database is created or updated
+    },
+
+    friendships: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Friendship'
+    }]
+          
+},{
+    // when ?,at what time?, record is created and updated
     timestamps: true
 });
 

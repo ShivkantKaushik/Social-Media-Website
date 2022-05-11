@@ -1,15 +1,12 @@
 <link rel="stylesheet" href="/css/user_profile.css">
 
-<% console.log(user) %>
-
-<img src="<%= user.avatar %>" alt="<%= user.name %>" width="100">
-
 <!-- this user data would be in res.locals
 <p><%= profile_user.name %> </p>
 <p><%= profile_user.email %> </p> -->
 
 <% if (user.id  == profile_user.id){ %>
     <!-- if user matches the show the form -->
+    <img src="<%= user.avatar %>" alt="<%= user.name %>" width="100">
     <form action="/users/update/<%= profile_user.id %>" enctype="multipart/form-data" method="post">
         <input type="text" name="name" placeholder="Your Name" value="<%= profile_user.name %>" required>
         <input type="email" name="email" placeholder="Your Email" value="<%= profile_user.email %>" required>
@@ -21,5 +18,39 @@
     <!-- else show only the profile info -->
     <p><%= profile_user.name %> </p>
     <p><%= profile_user.email %> </p>
+    <button id = "addFriendButton" data-isFriend = "<%= isFriend %>" data-toUser = '<%= profile_user._id %>'><%= buttonText %></button>
 
 <% } %>
+
+<script>
+    let addFriendButton = $("#addFriendButton");   
+    addFriendButton.click(function(){
+        let isFriend = addFriendButton.attr("data-isFriend");
+        if (isFriend == 'false'){
+            $.ajax({
+            type: 'POST',
+            url: "/friends/create",
+            data:{   toUser: addFriendButton.attr("data-toUser") },
+            success: function(data){
+                addFriendButton.text("Unfriend");
+                addFriendButton.attr("data-isFriend",'true');
+            }, error: function(error){
+                console.log(error.responseText);}
+        })
+        }else{
+
+            $.ajax({
+            type: 'POST',
+            url: "/friends/destroy",
+            data:{ toUser: addFriendButton.attr("data-toUser") },
+            success: function(data){
+                addFriendButton.text("Add Friend");
+                addFriendButton.attr("data-isFriend",'false');
+            }, error: function(error){
+                console.log(error.responseText);}
+        })
+        }
+        
+    })
+
+</script>
