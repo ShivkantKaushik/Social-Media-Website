@@ -3,9 +3,9 @@
         <title> <%= title %> </title>
         <!-- here /css,  becuse to look root of the folder we have give in index.js while
         defining static files  -->
-        <link rel="stylesheet" href="/css/layout.css">
-        <link rel="stylesheet" href="/css/header.css">
-        <link rel="stylesheet" href="/css/footer.css">
+        <link rel="stylesheet" href="<%= assetPath('css/layout.css') %>">
+        <link rel="stylesheet" href="<%= assetPath('css/header.css') %>">
+        <link rel="stylesheet" href="<%= assetPath('css/footer.css') %>">
 
         <!-- Now any link tag if there is in body of layout.ejs, it would put it in head section , and
         any script, it would put at place of <%- script %> -->

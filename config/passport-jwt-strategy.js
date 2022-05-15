@@ -4,13 +4,15 @@ const JWTStrategy = require('passport-jwt').Strategy;
 const ExtractJWT = require('passport-jwt').ExtractJwt;
 
 const User = require('../models/user');
+const env = require('./environment');
+
 
 // header is a list of key, that list has one key authorisation,this also has list,in this one key is bearer
 // this bearer will have JWT Token, ExtractJWT.fromAuthHeaderAsBearerToken, this will extract that token
 let opts = {
     jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
     // key to encrypt
-    secretOrKey: 'codeial'
+    secretOrKey: env.jwt_secret,
 }
 // function in this will reads the data from jwt payload, remember jwt had three parts,header, payload
 // and signature, this payload will contain the info of user, done is callback function 

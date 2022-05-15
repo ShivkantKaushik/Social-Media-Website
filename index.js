@@ -1,8 +1,14 @@
 const express = require("express");
 
+const env = require("./config/environment");
+
+
+const logger = require("morgan");
 // app variable will have all the functionalities of express, by calling express function and
 // assigned it to app variable
 const app = express();
+//Helpers are basically functions which, can be used in views by passing them to locals.
+require('./config/view-helpers')(app);
 
 const port = 8000;
 
@@ -33,14 +39,19 @@ const chatSockets = require("./config/chat_sockets").chatSockets(chatServer);
 chatServer.listen(5000);
 console.log("Chat server is listening on port 5000");
 
-//put this just before server starts, because we need these files to be precompiled just before the
+
+
+const path = require("path");
+
+if(env.name == 'development'){
+    //put this just before server starts, because we need these files to be precompiled just before the
 // server starts,so whenever browsers asks for the files we can give
 app.use(sassMiddleware({
     // from where I would pick scss files
     //add dot befor first slash, otherwise would not compile
-    src: './assets/scss',
+    src: path.join(__dirname, env.asset_path, 'scss'),
     //where do I need to put compiled css files back
-    dest: './assets/css',
+    dest: path.join(__dirname, env.asset_path, 'css'),
     // do I want to show error, while compiling, In production we give False 
     debug: true,
     // do I want everything to be in multiple lines(expanded) or in single line
@@ -48,6 +59,9 @@ app.use(sassMiddleware({
     // where do server look for initial css files
     prefix: "/css"
 }))
+
+}
+
 
 // reading through the post requests
 app.use(express.urlencoded());
@@ -60,12 +74,14 @@ app.set('layout extractStyles', true);
 //for javascript files or any script files
 app.set('layout extractScripts', true);
 
-
 // static files
-app.use(express.static("./assets"));
+app.use(express.static(env.asset_path));
 
 //make the uploads path available to the browser
 app.use('/uploads', express.static(__dirname + '/uploads'));
+
+// for logs in production and development 
+app.use(logger(env.morgan.mode, env.morgan.options));
 
 // set up the view engine
 app.set('view engine', 'ejs');
@@ -75,7 +91,7 @@ app.set('views', './views');
 app.use(session({
     name: 'Codeial',
     //TODO change the secret before deployment in production mode
-    secret: 'blahsomething',
+    secret: env.session_cookie_key,
     // when the session is not intialized, means user is not logged in do we want to save 
     // the extra data in the session cookie, no, so false
     saveUninitialized: false,
