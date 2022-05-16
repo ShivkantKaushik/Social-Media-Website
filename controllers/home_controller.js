@@ -16,7 +16,7 @@ module.exports.home = async function(req, res){
     //     if(err){console.log("error in finding posts");}
 
     //     return res.render('home', {
-    //         title: "Codeial | Home",
+    //         title: "SMW | Home",
     //         posts: posts
     //     });
 
@@ -55,7 +55,7 @@ module.exports.home = async function(req, res){
     //     User.find({}, function(err, users){
     //         if(err){console.log("error in finding posts");}
     //         return res.render('home', {
-    //             title: "Codeial | Home",
+    //             title: "SMW | Home",
     //             posts: posts,
     //             all_users: users
     //     })
@@ -134,7 +134,7 @@ module.exports.home = async function(req, res){
         // console.log(allFriends);
     
        return res.render('home', {
-        title: "Codeial | Home",
+        title: "SMW | Home",
         posts: posts,
         all_users: users,
         all_friends: allFriends

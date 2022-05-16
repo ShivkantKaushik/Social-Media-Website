@@ -111,7 +111,7 @@ module.exports.signup = function(req,res){
 
 
     return res.render('user_sign_up', {
-        title: "Codeial | Sign Up"
+        title: "SMW | Sign Up"
     })
 }
 
@@ -122,7 +122,7 @@ module.exports.signin = function(req,res){
     }
 
     return res.render('user_sign_in', {
-        title: "Codeial | Sign In"
+        title: "SMW | Sign In"
     })
 }
 
