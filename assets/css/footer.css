@@ -1,5 +1,8 @@
 #layout-footer {
   color: white;
+  font-family: "Montserrat";
+  position: relative;
+  z-index: 1;
   background: grey;
   padding: 5px 10px;
   display: flex;

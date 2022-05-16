@@ -2,16 +2,18 @@
     nav{
         display: flex;
         justify-content: space-between;
-        padding: 0 10px;
-        background: #2196f3;
+        padding: 5px 10px;
+        background: #4267B2;
         color: white;
         box-shadow: 1px 1px 1px 1px lightgrey;
+
 
         .mini-logo{
             p{
                 margin: 5px;
-                font-size: 1.4rem;
+                font-size: 1.8rem;
                 font-weight: bold;
+                font-family: "Ubuntu";
             }
         }
 
@@ -29,6 +31,8 @@
         a{
             color: white;
             text-decoration: none;
+            font-family: "Montserrat";
+            font-weight: bold;
         }
 
     }

@@ -5,7 +5,7 @@ class chatEngine{
 
         //to start the chat server
         // io is global variable given to us, as soon as we inculded cdnjs file of socket.io
-        this.socket = io.connect("http://localhost:5000");
+        this.socket = io.connect("http://54.245.69.175:5000");
 
         if(this.userEmail){
             this.connectionHandler();

@@ -2,7 +2,6 @@ const express = require("express");
 
 const env = require("./config/environment");
 
-
 const logger = require("morgan");
 // app variable will have all the functionalities of express, by calling express function and
 // assigned it to app variable
