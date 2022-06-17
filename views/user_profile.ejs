@@ -4,7 +4,7 @@
 <p><%= profile_user.name %> </p>
 <p><%= profile_user.email %> </p> -->
 
-<img src="<%= profile_user.avatar %>" alt="<%= user.name %>" width="100">
+<img src="<%= profile_user.avatar %>" alt="<%= profile_user.name %>" width="100">
 <% if (user.id  == profile_user.id){ %>
     <!-- if user matches the show the form -->
     <form action="/users/update/<%= profile_user.id %>" enctype="multipart/form-data" method="post">
